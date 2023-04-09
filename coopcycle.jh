@@ -1,0 +1,74 @@
+entity Customer {
+    firstName String required minlength(1) maxlength(20),
+    lastName String required minlength(1) maxlength(20),
+    email String required unique pattern(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/),
+    phone String required unique pattern(/^[0-9]{10}$/),
+    address String required
+}
+
+entity Restaurant {
+    name String required,
+    address String required
+}
+
+entity Deliverer {
+    lastName String required minlength(1) maxlength(20),
+    firstName String required minlength(1) maxlength(20),
+    email String required unique pattern(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/), 
+    phone String required unique pattern(/^[0-9]{10}$/),
+    vehiculeType VehicleType required,
+}
+
+entity Product {
+    name String required,
+    price Double required,
+    description String,
+}
+
+entity Command {
+	id Integer required unique,
+    commandDate ZonedDateTime required,
+    deliveryDate ZonedDateTime,
+    commandStatusType CommandStatusType required,
+}
+enum CommandStatusType {
+    CREATED, ACCEPTED, PICKED_UP, DELIVERED, CANCELLED
+}
+
+enum PaymentType {
+    CB,
+    MASTER_CARD,
+    VISA,
+    PAYPAL,
+    APPLE_PAY,
+    GOOGLE_PAY,
+    MEAL_VOUCHER,
+    BTC,
+    IZLY
+}
+
+enum VehicleType {
+	BIKE,
+    SCOOTER,
+    ELEC_SCOOTER
+}
+
+entity Cooperative {
+    name String required,
+    manager String required,
+}
+
+relationship OneToMany {
+    Restaurant to Command,
+    Restaurant to Product,
+    Cooperative to Restaurant,
+    Cooperative to Deliverer,
+    Cooperative to Customer,
+    Deliverer to Command,
+    Customer to Command,
+}
+relationship ManyToMany {
+    Command to Product,
+}
+
+dto * with mapstruct
